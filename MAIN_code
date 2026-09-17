@@ -1,0 +1,227 @@
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class BookInventorySystem extends JFrame {
+
+    static class Book {
+        String id, title, author;
+        int quantity;
+        Book(String id, String title, String author, int quantity) {
+            this.id = id; this.title = title; this.author = author; this.quantity = quantity;
+        }
+    }
+
+    private final List<Book> inventory = new ArrayList<>();
+    private final DefaultTableModel tableModel;
+    private final JTable table;
+    private final JTextField idField, titleField, authorField, quantityField, searchField;
+
+    public BookInventorySystem() {
+        // seed data
+        inventory.add(new Book("B001", "The Downpour", "Andrew yadav", 5));
+        inventory.add(new Book("B002", "Effective Java", "Joshua Baloch", 3));
+        inventory.add(new Book("B003", "Clean Code", "Robert C. Martin", 7));
+
+        setTitle("Book Inventory System");
+        setSize(800, 480);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new BorderLayout(10, 10));
+
+        // Table 
+        tableModel = new DefaultTableModel(new Object[]{"ID", "Title", "Author", "Quantity"}, 0) {
+            @Override
+            public boolean isCellEditable(int row, int col) { return false; }
+        };
+        table = new JTable(tableModel);
+        add(new JScrollPane(table), BorderLayout.CENTER);
+ 
+        JPanel formPanel = new JPanel(new GridLayout(2, 5, 5, 5));
+        formPanel.setBorder(BorderFactory.createTitledBorder("Book Details"));
+        idField = new JTextField();
+        titleField = new JTextField();
+        authorField = new JTextField();
+        quantityField = new JTextField();
+        formPanel.add(new JLabel("ID:"));
+        formPanel.add(idField);
+        formPanel.add(new JLabel("Title:"));
+        formPanel.add(titleField);
+        formPanel.add(new JLabel("Author:"));
+        formPanel.add(authorField);
+        formPanel.add(new JLabel("Quantity:"));
+        formPanel.add(quantityField);
+        add(formPanel, BorderLayout.NORTH);
+
+        // Buttons + Search (bottom)
+        JPanel bottomPanel = new JPanel(new BorderLayout(5, 5));
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JButton addBtn = new JButton("Add");
+        JButton updateBtn = new JButton("Update");
+        JButton removeBtn = new JButton("Remove");
+        JButton refreshBtn = new JButton("Refresh");
+        buttonPanel.add(addBtn);
+        buttonPanel.add(updateBtn);
+        buttonPanel.add(removeBtn);
+        buttonPanel.add(refreshBtn);
+
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        searchField = new JTextField(15);
+        JButton searchBtn = new JButton("Search");
+        searchPanel.add(new JLabel("Search:"));
+        searchPanel.add(searchField);
+        searchPanel.add(searchBtn);
+
+        bottomPanel.add(buttonPanel, BorderLayout.WEST);
+        bottomPanel.add(searchPanel, BorderLayout.EAST);
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        // MODULE 1: ADD / UPDATE
+        addBtn.addActionListener(e -> {
+            String id = idField.getText().trim();
+            String title = titleField.getText().trim();
+            String author = authorField.getText().trim();
+            String qtyText = quantityField.getText().trim();
+
+            if (id.isEmpty() || title.isEmpty() || qtyText.isEmpty()) {
+                showError("ID, Title, and Quantity cannot be empty.");
+                return;
+            }
+            int qty;
+            try {
+                qty = Integer.parseInt(qtyText);
+                if (qty < 0) throw new NumberFormatException();
+            } catch (NumberFormatException ex) {
+                showError("Quantity must be a valid non-negative number.");
+                return;
+            }
+            if (findBook(id) != null) {
+                showError("A book with ID '" + id + "' already exists. Use Update instead.");
+                return;
+            }
+            inventory.add(new Book(id, title, author, qty));
+            clearFields();
+            refreshTable();
+        });
+
+        updateBtn.addActionListener(e -> {
+            String id = getSelectedOrTypedId();
+            Book b = findBook(id);
+            if (b == null) {
+                showError("No book found with ID '" + id + "'.");
+                return;
+            }
+            String title = titleField.getText().trim();
+            String author = authorField.getText().trim();
+            String qtyText = quantityField.getText().trim();
+            if (title.isEmpty() || qtyText.isEmpty()) {
+                showError("Title and Quantity cannot be empty.");
+                return;
+            }
+            int qty;
+            try {
+                qty = Integer.parseInt(qtyText);
+                if (qty < 0) throw new NumberFormatException();
+            } catch (NumberFormatException ex) {
+                showError("Quantity must be a valid non-negative number.");
+                return;
+            }
+            b.title = title;
+            b.author = author;
+            b.quantity = qty;
+            clearFields();
+            refreshTable();
+        });
+
+        //  MODULE 2: REMOVE / DELETE
+        removeBtn.addActionListener(e -> {
+            String id = getSelectedOrTypedId();
+            Book b = findBook(id);
+            if (b == null) {
+                showError("No book found with ID '" + id + "'.");
+                return;
+            }
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Remove '" + b.title + "' from inventory?",
+                    "Confirm Removal", JOptionPane.YES_NO_OPTION);
+            if (confirm == JOptionPane.YES_OPTION) {
+                inventory.remove(b);
+                clearFields();
+                refreshTable();
+            }
+        });
+
+        refreshBtn.addActionListener(e -> {
+            searchField.setText("");
+            refreshTable();
+        });
+
+        //  MODULE 3: SEARCH & VIEW
+        searchBtn.addActionListener(e -> {
+            String k = searchField.getText().trim().toLowerCase();
+            List<Book> results = new ArrayList<>();
+            for (Book b : inventory) {
+                if (k.isEmpty() || b.id.toLowerCase().contains(k)
+                        || b.title.toLowerCase().contains(k)
+                        || b.author.toLowerCase().contains(k)) {
+                    results.add(b);
+                }
+            }
+            populateTable(results);
+        });
+
+        table.getSelectionModel().addListSelectionListener(e -> {
+            int row = table.getSelectedRow();
+            if (row >= 0) {
+                idField.setText(tableModel.getValueAt(row, 0).toString());
+                titleField.setText(tableModel.getValueAt(row, 1).toString());
+                authorField.setText(tableModel.getValueAt(row, 2).toString());
+                quantityField.setText(tableModel.getValueAt(row, 3).toString());
+            }
+        });
+
+        refreshTable();
+    }
+
+    private Book findBook(String id) {
+        for (Book b : inventory) {
+            if (b.id.equalsIgnoreCase(id)) return b;
+        }
+        return null;
+    }
+
+    private String getSelectedOrTypedId() {
+        int row = table.getSelectedRow();
+        if (row >= 0) return tableModel.getValueAt(row, 0).toString();
+        return idField.getText().trim();
+    }
+
+    private void clearFields() {
+        idField.setText("");
+        titleField.setText("");
+        authorField.setText("");
+        quantityField.setText("");
+    }
+
+    private void refreshTable() {
+        populateTable(inventory);
+    }
+
+    private void populateTable(List<Book> list) {
+        tableModel.setRowCount(0);
+        for (Book b : list) {
+            tableModel.addRow(new Object[]{b.id, b.title, b.author, b.quantity});
+        }
+    }
+
+    private void showError(String message) {
+        JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new BookInventorySystem().setVisible(true));
+    }
+}
