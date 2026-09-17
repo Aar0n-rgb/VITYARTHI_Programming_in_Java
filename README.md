@@ -123,7 +123,7 @@ The three sample books should be displayed.
 
 2. Test Adding a Book
 
-Enter the following details:
+upon Enter the following details:
 
 ID: B004
 Title: Java Basics
@@ -131,14 +131,14 @@ Author: Test Author
 Quantity: 5
 
 
-Click Add.
+and Clicking Add.
 
-Expected result:
+Expected result is:
 The new book should appear in the table and the input fields should become empty.
 
 3. Test Duplicate ID
 
-Try adding another book using an existing ID, such as B001.
+We Try adding another book using an existing ID, such as B001.
 
 Expected result:
 The program should show an error saying that a book with that ID already exists.
