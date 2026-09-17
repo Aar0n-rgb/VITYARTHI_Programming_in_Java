@@ -46,11 +46,6 @@ Java AWT – Used for layouts and GUI components
 The project can be developed and run using any Java IDE, such as IntelliJ IDEA, Eclipse, NetBeans, or Visual Studio Code.
 
 Project Structure
-BookInventorySystem/
-│
-├── BookInventorySystem.java
-└── README.md
-
 
 The main Java file contains the complete application, including the book class, GUI, inventory operations, validation, and main method.
 
