@@ -1,80 +1,77 @@
 Problem Statement
 
-Keeping track of books manually can be difficult, especially when the number of books increases. It can take a lot of time to find a particular book, change its details, or check how many copies are available.
+Maintaining records of books by hand or spreadsheet can be tedious, especially as the number of books increases. It can also take a long time to search for a particular book, edit its details, or know how many copies are in stock.
 
-The Book Inventory System is created to solve this problem by providing a simple computer-based way to manage book records. The system keeps basic information such as the book ID, title, author, and quantity in one place.
+The Book Inventory System is developed to address this issue by providing a simple computer-based solution to maintaining book records. This system stores information such as book ID, title, author, and quantity in one place easily.
 
-The main goal of this project is to make managing book records easier, quicker, and more organized.
+The idea of the project is to provide a convenient way of managing book records.
 
-Scope of the Project
+The Scope of the Project
 
-This project focuses on the basic management of books in an inventory. Users can perform common operations such as adding, updating, deleting, searching, and viewing books.
+The project focuses on managing books in the inventory at a fundamental level. This implies that the system allows the users to carry out the following operations:
 
-The system can be used to:
+• Adding a book
 
-Add new books to the inventory.
+• Viewing books
 
-View all the books currently available.
+• Updating a book
 
-Change the details of an existing book.
+• Deleting a book
 
-Remove books from the inventory.
+• Searching for a book
 
-Search for a book by its ID, title, or author.
+• Validating the input
 
-Check that the information entered by the user is valid.
+• Refreshing the table
 
-Refresh the table to see the complete inventory.
-
-In the current version, the book data is stored temporarily using an ArrayList. This means that the data will be lost when the application is closed.
-
-The project can be improved later by adding a database, login system, ISBN, price, category, and other useful book details.
+The scope does not include advanced concepts such as a database, login interface, or other features that would be covered in more complex projects. In the current version of the system, the record of the book is temporarily stored in a java.util.ArrayList. This means that the information will be deleted when the application is closed. However, the system can be enhanced to include features such as a graphical user interface, database, login system, ISBN, and price.
 
 Target Users
 
-This system can be useful for:
+This project would benefit several users such as:
 
-Small bookshops that need a simple way to keep track of their books.
+• Small-scale bookshops that need a record of the books they have in stock.
 
-School and college libraries for maintaining basic book records.
+• School and college libraries that require a system to manage the book inventory.
 
-Students who want to learn about Java, Swing, and CRUD operations.
+• Students studying computer science who need to develop skills in Java, Swing, and simple CURD operations using Java.
 
-Small organizations that need a simple local system for managing books.
+• Small organizations that need to manage their book inventory system locally.
 
-The current version is mainly designed for small-scale use and learning purposes.
+The current scope of the project is geared towards small-scale organizations and students.
 
 High-Level Features
+
+The Book Inventory System has the following features:
+
 Add Book
 
-Users can enter the book ID, title, author, and quantity to add a new book to the inventory.
+This feature enables the user to add a book to the system by providing the relevant book information.
 
 View Books
 
-All books are displayed in a table, making it easy to see their ID, title, author, and available quantity.
+This option allows the user to view all the books in the inventory. The book details such as the book ID, title, author, and quantity are extracted and displayed in a table.
 
 Update Book
 
-Users can select a book and change its title, author, or quantity.
+This functionality allows the user to update the book details by specifying the book ID.
 
 Remove Book
 
-Users can delete a book from the inventory. The system asks for confirmation before removing it.
+This feature allows the user to remove a book from the inventory. The user gets a warning before the book is permanently deleted.
 
 Search Book
 
-Users can search for a book using its ID, title, or author. The search also works regardless of whether uppercase or lowercase letters are used.
+This option allows the user to search for a book by title, book ID, or the author. It also ignores the case of the characters when the search is being performed.
 
 Input Validation
 
-The system checks the information entered by the user. For example, it does not allow duplicate IDs, empty required fields, or negative quantities.
+This system ensures that the user provides correct input. It detects some errors such as repeated book IDs, leaving no input in the text fields, and negative quantity.
 
 Refresh
 
-The Refresh button displays the complete inventory again after a search or other operation.
+This button is used to refresh or reload the table when a search or any other operation has been performed.
 
 Summary
 
-The Book Inventory System is a simple project designed to make basic book management easier. It provides the main operations needed to maintain an inventory while keeping the interface simple and easy to understand.
-
-The project also provides a good base for adding more advanced features, such as database storage and user login, in the future.
+The Book Inventory System is a small project that aims to provide a convenient way of managing book records. Apart from providing the basic operations of managing a book inventory, it also serves as a good starting point for more advanced projects. The system includes a set of basic functions that can be used to develop skills in Java Swing and CURD operations. Advanced functions such as a database can be added to enhance the system further.
